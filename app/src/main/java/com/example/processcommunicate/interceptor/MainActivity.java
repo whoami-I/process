@@ -96,8 +96,19 @@ public class MainActivity extends Activity {
                 Log.e(TAG, "cache--:" + cache);
                 //这里有坑，可能DiskLruCache没有写进去
                 ResponseBody body = response.body();
-                body.close();
-                body.close();
+
+                InputStream is = body.byteStream();
+                byte b[] = new byte[1024];
+                int read = is.read();
+                if (response == response.cacheResponse()) {
+                    Log.e(TAG, "response==response.cacheResponse()");
+                } else if (response == response.networkResponse()) {
+                    Log.e(TAG, "response==response.networkResponse()");
+                }
+
+
+                //body.close();
+                //body.close();
             }
         });
 

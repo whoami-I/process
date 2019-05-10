@@ -24,7 +24,7 @@ public class MyCacheInterceptor implements Interceptor {
         Response response1 = response.newBuilder().
                 removeHeader("Cache-Control")
                 .removeHeader("Pragma")
-                .header("Cache-Control",
+                .addHeader("Cache-Control",
                         "public, max-age="+30)
                 .build();
         return response1;
