@@ -96,8 +96,8 @@ public class MainActivity extends Activity {
                 Log.e(TAG, "cache--:" + cache);
                 //这里有坑，可能DiskLruCache没有写进去
                 ResponseBody body = response.body();
-                body.close();
-                body.close();
+                //body.close();
+                //body.close();
             }
         });
 
