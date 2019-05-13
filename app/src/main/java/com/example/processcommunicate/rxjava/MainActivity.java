@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_rxjava);
-        zip();
+        oom();
         Log.e(TAG, "hahah");
 
     }
@@ -53,6 +53,24 @@ public class MainActivity extends Activity {
             mDisposable.dispose();
 
         super.onDestroy();
+    }
+
+    //oom
+    void oom() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) {
+                for (int i = 0; ; ++i) {
+                    emitter.onNext(i);
+                }
+            }
+        }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e(TAG, "get --> " + integer.intValue());
+            }
+        });
+
     }
 
     //zip操作符
