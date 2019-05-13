@@ -10,9 +10,16 @@ import android.widget.ImageView;
 
 import com.example.processcommunicate.R;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import java.io.File;
 import java.io.IOException;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -42,7 +49,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_rxjava);
-        oom();
+        flowable();
         Log.e(TAG, "hahah");
 
     }
@@ -55,6 +62,45 @@ public class MainActivity extends Activity {
         super.onDestroy();
     }
 
+
+    void flowable() {
+        Flowable<Integer> upstream = Flowable.create(new FlowableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(FlowableEmitter<Integer> emitter) {
+                for (int i = 0; i < 10; ++i) {
+                    emitter.onNext(i);
+                    //Log.e(TAG, "emitter --> " + i);
+                }
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.ERROR);
+
+        Subscriber<Integer> downstream = new Subscriber<Integer>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+                s.request(1);
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.e(TAG, "onNext --> " + integer.intValue());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+        upstream.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(downstream);
+    }
+
     //oom
     void oom() {
         Observable.create(new ObservableOnSubscribe<Integer>() {
@@ -62,14 +108,21 @@ public class MainActivity extends Activity {
             public void subscribe(ObservableEmitter<Integer> emitter) {
                 for (int i = 0; ; ++i) {
                     emitter.onNext(i);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "get --> " + integer.intValue());
-            }
-        });
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e(TAG, "get --> " + integer.intValue());
+                    }
+                });
 
     }
 
