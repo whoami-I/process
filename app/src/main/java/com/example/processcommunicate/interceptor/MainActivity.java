@@ -96,6 +96,7 @@ public class MainActivity extends Activity {
                 Log.e(TAG, "cache--:" + cache);
                 //这里有坑，可能DiskLruCache没有写进去
                 ResponseBody body = response.body();
+<<<<<<< HEAD
 
                 InputStream is = body.byteStream();
                 byte b[] = new byte[1024];
@@ -107,6 +108,8 @@ public class MainActivity extends Activity {
                 }
 
 
+=======
+>>>>>>> add7fe41d42c7b0e158f1a53f32c7bea1c57f78c
                 //body.close();
                 //body.close();
             }
