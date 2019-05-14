@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         Flowable<Integer> upstream = Flowable.create(new FlowableOnSubscribe<Integer>() {
             @Override
             public void subscribe(FlowableEmitter<Integer> emitter) {
-                for (int i = 0; i < 10; ++i) {
+                for (int i = 0; i < 130; ++i) {
                     emitter.onNext(i);
                     //Log.e(TAG, "emitter --> " + i);
                 }
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onError(Throwable t) {
-
+                Log.w(TAG, "onError: ", t);
             }
 
             @Override
