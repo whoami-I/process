@@ -15,6 +15,10 @@ import org.reactivestreams.Subscription;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -23,6 +27,7 @@ import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,6 +47,19 @@ import okio.Source;
 
 public class MainActivity extends Activity {
 
+    class A implements Callable<ObservableSource<Integer>> {
+        private Integer i;
+
+        public A(Integer i) {
+            this.i = i;
+        }
+
+        @Override
+        public ObservableSource<Integer> call() throws Exception {
+            return Observable.just(i);
+        }
+    }
+
     private final static String TAG = "MainActivity";
     Disposable mDisposable;
 
@@ -49,7 +67,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_rxjava);
-        flowable();
+        interval();
         Log.e(TAG, "hahah");
 
     }
@@ -60,6 +78,102 @@ public class MainActivity extends Activity {
             mDisposable.dispose();
 
         super.onDestroy();
+    }
+
+    void interval() {
+        Observable.interval(5, 1, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                Log.e(TAG, "along --> " + aLong);
+            }
+        });
+    }
+
+
+    void timer() {
+        Observable.timer(4, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                Log.e(TAG, "long --> " + aLong);
+            }
+        });
+    }
+
+
+    void defer() {
+        Integer i = new Integer(0);
+        A a = new A(i);
+        Observable<Integer> defer = Observable.defer(a);
+        i = new Integer(10);
+        defer.subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e(TAG, "call --> " + integer.intValue());
+            }
+        });
+    }
+
+    void empty() {
+        Observable.empty().subscribe(new Observer<Object>() {
+
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "onSubscribe");
+            }
+
+            @Override
+            public void onNext(Object o) {
+                Log.e(TAG, "onNext");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "onComplete");
+            }
+        });
+    }
+
+    void fromIterable() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 20; ++i) {
+            list.add(1);
+        }
+        Observable.fromIterable(list).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e(TAG, "accept event --> " + integer.intValue());
+            }
+        });
+    }
+
+    void fromArray() {
+        Integer[] a = new Integer[100];
+        for (int i = 0; i < a.length; i++) {
+            a[i] = i;
+        }
+
+        Observable.fromArray(a).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e(TAG, "accept event --> " + integer.intValue());
+            }
+        });
+
+    }
+
+    void just() {
+        Observable.just(1, 2, 3).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e(TAG, "accept event --> " + integer.intValue());
+            }
+        });
     }
 
 
