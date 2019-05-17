@@ -2,19 +2,12 @@ package com.example.processcommunicate.lrucache;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
-import android.util.LruCache;
 
-import com.example.processcommunicate.R;
-
-import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-import okio.BufferedSource;
-import okio.Okio;
-import okio.Source;
+
 
 public class MainActivity extends Activity {
 
