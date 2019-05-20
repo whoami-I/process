@@ -8,16 +8,27 @@ import android.widget.Toast;
 import com.example.processcommunicate.R;
 
 
-import java.io.IOException;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends Activity {
@@ -30,7 +41,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_retrofit);
-        YouDaoTranslate();
+
+
+        addRxJava();
 
     }
 
@@ -45,6 +58,35 @@ public class MainActivity extends Activity {
                 return response;
             }
         };
+    }
+
+    void addRxJava() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://www.baidu.com")
+                .addConverterFactory(new Converter.Factory() {
+                    @Override
+                    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+                        return new Converter<ResponseBody, String>() {
+
+                            @Override
+                            public String convert(ResponseBody value) throws IOException {
+                                return value.string();
+                            }
+                        };
+                    }
+                })
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+
+        RxJavaFactory rxJavaFactory = retrofit.create(RxJavaFactory.class);
+        rxJavaFactory.getMessage().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e(TAG, "return --> " + s);
+                    }
+                });
     }
 
     void YouDaoTranslate() {
