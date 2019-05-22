@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".retrofit.MainActivity">
+        <activity android:name=".myeventbus.MainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,6 +40,7 @@
         </service>
 
         <activity android:name=".binder.SecondActivity" />
+        <activity android:name=".eventbus.SecondActivity" />
     </application>
 
 </manifest>
