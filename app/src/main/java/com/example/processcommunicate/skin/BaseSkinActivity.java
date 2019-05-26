@@ -5,14 +5,17 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatViewInflater;
 import android.support.v7.widget.VectorEnabledTintResources;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -24,15 +27,22 @@ import com.example.processcommunicate.R;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import java.util.List;
+
+import butterknife.ButterKnife;
+
 public class BaseSkinActivity extends Activity {
     private static final String TAG = "BaseSkinActivity";
     private SkinCompatViewInflater mSkinCompatViewInflater;
 
     private static final boolean IS_PRE_LOLLIPOP = Build.VERSION.SDK_INT < 21;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SkinManager.getInstance().init(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         LayoutInflaterCompat.setFactory2(inflater, new LayoutInflater.Factory2() {
 
@@ -48,6 +58,14 @@ public class BaseSkinActivity extends Activity {
                 View view = createView(parent, name, context, attrs);
                 //解析换肤参数
                 Log.e(TAG, "view --> " + view);
+                if (view != null) {
+                    List<SkinAttr> skinAttrs = SkinAttrsSupport.getAttrs(context, attrs);
+                    if (skinAttrs != null && !skinAttrs.isEmpty()) {
+                        SkinView skinView = new SkinView(view, skinAttrs);
+                        //加入到map集合中
+                        SkinManager.getInstance().register(BaseSkinActivity.this, skinView);
+                    }
+                }
                 return view;
 
             }
@@ -120,5 +138,12 @@ public class BaseSkinActivity extends Activity {
             }
             parent = parent.getParent();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //因为hashmap有activity的引用，因此在销毁时，断开这个引用
+        SkinManager.getInstance().unRegister(this);
     }
 }

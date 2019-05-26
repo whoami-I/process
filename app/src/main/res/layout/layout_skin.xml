@@ -7,20 +7,39 @@
     android:id="@+id/li"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     android:orientation="vertical">
 
-    <TextView
+    <Button
+        android:id="@+id/skin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="skin"
+        android:textColor="@color/colorAccent"
+        />
 
-        android:text="图片"
-        android:textSize="30sp" />
+    <Button
+        android:id="@+id/addActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="addActivity"
+        android:textColor="@color/colorAccent"
+       />
+
+    <Button
+        android:id="@+id/restore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:text="restore"
+         />
+
 
     <ImageView
         android:id="@+id/iv"
-        android:src="@drawable/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/image"
 
         />
 
