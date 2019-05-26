@@ -5,31 +5,19 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatViewInflater;
-import android.support.v7.widget.VectorEnabledTintResources;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.example.processcommunicate.R;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 
 public class BaseSkinActivity extends Activity {
     private static final String TAG = "BaseSkinActivity";
@@ -54,9 +42,9 @@ public class BaseSkinActivity extends Activity {
 
             @Override
             public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-                //创建view
+                //1、创建view
                 View view = createView(parent, name, context, attrs);
-                //解析换肤参数
+                //2、解析换肤参数
                 Log.e(TAG, "view --> " + view);
                 if (view != null) {
                     List<SkinAttr> skinAttrs = SkinAttrsSupport.getAttrs(context, attrs);
@@ -64,8 +52,18 @@ public class BaseSkinActivity extends Activity {
                         SkinView skinView = new SkinView(view, skinAttrs);
                         //加入到map集合中
                         SkinManager.getInstance().register(BaseSkinActivity.this, skinView);
+
+                        //3、看是否需要换肤
+                        String skinPath = SkinManager.getInstance().getSkinPath();
+                        if (skinPath != null) {
+                            Log.e(TAG, "skin path --> " + skinPath);
+                            SkinManager.getInstance().checkSkin(skinView);
+                        }
                     }
                 }
+
+
+
                 return view;
 
             }

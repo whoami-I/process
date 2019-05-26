@@ -60,6 +60,10 @@ public class SkinResource {
         return drawable;
     }
 
+    public String getResourcePath() {
+        return mResourcePath;
+    }
+
     public ColorStateList getColorByName(String name) {
 
         int identifier = mResource.getIdentifier(name, "color", mPackageName);

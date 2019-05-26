@@ -37,7 +37,6 @@ public class MainActivity extends BaseSkinActivity {
     }
 
 
-
     @OnClick(R.id.skin)
     public void skin(View v) {
         Log.e(TAG, "skin");
@@ -55,6 +54,6 @@ public class MainActivity extends BaseSkinActivity {
 
     @OnClick(R.id.restore)
     public void restore(View v) {
-
+        SkinManager.getInstance().restoreDefaultSkin();
     }
 }
