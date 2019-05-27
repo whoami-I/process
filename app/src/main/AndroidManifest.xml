@@ -14,8 +14,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".plugin.MyApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".skin.MainActivity">
+        <activity android:name=".plugin.MainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +39,7 @@
             </intent-filter>
 
         </service>
-
+        <activity android:name=".plugin.ProxyActivity" />
         <activity android:name=".binder.SecondActivity" />
         <activity android:name=".eventbus.SecondActivity" />
     </application>
