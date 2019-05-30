@@ -51,7 +51,7 @@ public class HookUtils {
         if (!getServiceMethod.isAccessible()) {
             getServiceMethod.setAccessible(true);
         }
-        Object o = getServiceMethod.invoke(null, null);
+        Object o = getServiceMethod.invoke(null);
 
 
         Object proxyInstance = Proxy.newProxyInstance(
