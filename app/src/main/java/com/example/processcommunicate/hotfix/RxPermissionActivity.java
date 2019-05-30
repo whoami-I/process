@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.processcommunicate.R;
+import com.example.processcommunicate.base.BaseActivity;
 import com.example.processcommunicate.log.Log;
 
 import java.io.File;
@@ -22,48 +23,19 @@ import java.io.File;
 import io.reactivex.functions.Consumer;
 
 
-public class RxPermissionActivity extends AppCompatActivity {
+public class RxPermissionActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.layout_permission);
-
-        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-        int i = ContextCompat.checkSelfPermission(this, permissions[0]);
-        if (i != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this
-                    , permissions, 3);
-
-        } else {
-            onSuccess();
-        }
-
 
     }
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 3:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e("TAG", "tongyi");
-
-                } else {
-                    Toast.makeText(this, "权限被拒绝了", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    void onSuccess() {
+    protected void onSuccess() {
+        setContentView(R.layout.layout_permission);
         String fromPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +
                 "1myfile" + File.separator + "fixdex";
         FixbugManager fixbugManager = new FixbugManager(
@@ -71,6 +43,6 @@ public class RxPermissionActivity extends AppCompatActivity {
         fixbugManager.fixBug();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-    }
 
+    }
 }
