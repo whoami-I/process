@@ -36,5 +36,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_test);
         TryTest.main();
+
     }
 }
