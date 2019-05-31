@@ -11,51 +11,72 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 
 import dalvik.system.BaseDexClassLoader;
+import dalvik.system.DexClassLoader;
 
 public class FixbugManager {
+    private static final String TAG = "FixbugManager";
+    private static final String DEX_SUFFIX = ".dex";
+    private static final String APK_SUFFIX = ".apk";
+    private static final String JAR_SUFFIX = ".jar";
+    private static final String ZIP_SUFFIX = ".zip";
 
-    String fixedDexFilePath;
+    private static final String OPTIMIZEDDIRNAME = "odex";
+    private HashSet<File> fixedFiles = new HashSet<>();
+
     Context mContext;
+    String fixedDexDirPath;
 
-    public FixbugManager(Context context, String fixedDexFilePath) {
-        this.fixedDexFilePath = fixedDexFilePath;
+    public FixbugManager(Context context, String fixedDexDirPath) {
+        this.fixedDexDirPath = fixedDexDirPath;
         this.mContext = context;
     }
 
     public void fixBug() {
-        ClassLoader cl = mContext.getClassLoader();
-        Log.e("TAG", "cl --> " + cl);
+        fixedFiles.clear();
 
-        Object[] dexElements = getDexElements(cl);
-
-        File fixdexDir = mContext.getDir("fixdexDir", mContext.MODE_PRIVATE);
-        if (!fixdexDir.exists()) {
-            fixdexDir.mkdir();
+        File fixedDexDir = new File(fixedDexDirPath);
+        if (!fixedDexDir.exists() || !fixedDexDir.isDirectory()) {
+            Log.e(TAG, fixedDexDirPath + " must exist and is a directory");
+            return;
         }
-
-        String path = fixdexDir.getAbsolutePath() + File.separator + "fixdex";
-        File dexFile = new File(path);
-        File fromFile = new File(fixedDexFilePath);
-        //判断fromFile是否存在，如果不存在则跳过复制文件
-        if (fromFile.exists()) {
-            copyFile(fromFile, dexFile);
+        File[] files = fixedDexDir.listFiles();
+        for (File file : files) {
+            String filePath = file.getAbsolutePath();
+            if (filePath.endsWith(DEX_SUFFIX)
+                    || filePath.endsWith(APK_SUFFIX)
+                    || filePath.endsWith(JAR_SUFFIX)
+                    || filePath.endsWith(ZIP_SUFFIX)) {
+                //符合条件
+                fixedFiles.add(file);
+            }
         }
-
-
-        if (dexFile.exists()) {
-            //如果有补丁，fixbug
-            BaseDexClassLoader baseDexClassLoader = new BaseDexClassLoader(
-                    dexFile.getAbsolutePath(), null, null, cl);
-            Object[] fixDexElements = getDexElements(baseDexClassLoader);
-            dexElements = combineArray(fixDexElements, dexElements);
-
-            inject(cl, dexElements);
+        if (!fixedFiles.isEmpty()) {
+            fixBugWithFiles();
         }
-
 
     }
+
+    private void fixBugWithFiles() {
+        ClassLoader cl = mContext.getClassLoader();
+        Log.e("TAG", "cl --> " + cl);
+        File optimizedDIR = new File(mContext.getDir(OPTIMIZEDDIRNAME, Context.MODE_PRIVATE).getAbsolutePath());
+        if (!optimizedDIR.exists()) {
+            optimizedDIR.mkdir();
+        }
+        for (File fixedDex : fixedFiles) {
+            DexClassLoader dexClassLoader = new DexClassLoader(fixedDex.getAbsolutePath(),
+                    optimizedDIR.getAbsolutePath(), null, cl);
+            Object[] fixedDexElements = getDexElements(dexClassLoader);
+            Object[] bugDexElements = getDexElements(cl);
+            bugDexElements = combineArray(fixedDexElements, bugDexElements);
+            inject(cl, bugDexElements);
+        }
+
+    }
+
 
 
     private void inject(ClassLoader cl, Object injected) {

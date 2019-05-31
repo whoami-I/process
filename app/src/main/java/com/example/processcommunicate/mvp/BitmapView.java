@@ -2,11 +2,9 @@ package com.example.processcommunicate.mvp;
 
 import android.graphics.Bitmap;
 
-public interface BitmapView {
+import com.example.processcommunicate.mvp.base.BaseView;
 
-    void onSuccess(Bitmap bitmap);
+public interface BitmapView extends BaseView<Bitmap> {
 
-    void onError();
 
-    void onLoading();
 }

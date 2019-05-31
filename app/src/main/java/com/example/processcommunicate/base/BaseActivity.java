@@ -30,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    //在success中setContentView
     protected abstract void onSuccess();
 
     @Override

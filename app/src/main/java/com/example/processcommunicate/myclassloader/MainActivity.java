@@ -1,6 +1,5 @@
-package com.example.processcommunicate.test;
+package com.example.processcommunicate.myclassloader;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,44 +9,24 @@ import com.example.processcommunicate.base.BaseActivity;
 import com.example.processcommunicate.log.Log;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
-import dalvik.system.BaseDexClassLoader;
 import dalvik.system.DexClassLoader;
 
-class TryTest {
-    public static void main() {
-        System.out.println(test());
-    }
-
-    private static int test() {
-        int num = 10;
-        try {
-            System.out.println("try");
-            return num += 80;
-        } catch (Exception e) {
-            System.out.println("error");
-        } finally {
-            if (num > 20) {
-                System.out.println("num > 20 :" + num);
-            }
-            System.out.println("finally");
-            return 100;
-        }
-        //return num;
-    }
-}
-
-
+/**
+ * 这个代码实现了自定义ClassLoader，实现了加载两个具有相同的全限定名的类
+ * 实现的方法就是自己定义一个DexClassLoader，设定好需要加载类的位置，然后
+ * 还要定义一个MyClassLoder作为DexClassLoader Parent Classloder，因为如果使用apk的ClassLoader
+ * 作为Parent Classloder的话，会由于双亲委派模式导致加载的只能是apk中的类，
+ * 定义MyClassLoder的话，需要注意：因为我们想要加载的类继承自Object，因此加载器
+ * 会去找Object类，因此在MyClassLoder中使用代理，如果要找自己定义的类，那么就返回null，
+ * 使得DexClassLoader去找到，如果是其他的类，那么就使用apk的ClassLoader去找
+ */
 public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //TryTest.main();
-
     }
 
     @Override
@@ -69,12 +48,13 @@ public class MainActivity extends BaseActivity {
             DexClassLoader dexClassLoader = new DexClassLoader(Environment.getExternalStorageDirectory().getAbsolutePath() +
                     File.separator + "1fix" + File.separator + "classes2.dex", optimizedDir.getAbsolutePath(), null, myClassLoader);
 
-            Class<?> aClass = dexClassLoader.loadClass("com.example.processcommunicate.test.A");
+            Class<?> aClass = dexClassLoader.loadClass("com.example.processcommunicate.myclassloader.A");
 //            Object a = aClass.newInstance();
 //            Method show = aClass.getDeclaredMethod("show");
 //            show.setAccessible(true);
 //            show.invoke(a);
-
+            //之所以转化成接口的原因是，在这里如果转化成A，那么就会导致转化异常。因为在这里A就是指
+            //apk ClassLoader加载得到的A
             IA a = (IA) aClass.newInstance();
             a.show();
         } catch (Exception e) {
@@ -83,7 +63,7 @@ public class MainActivity extends BaseActivity {
         }
 
         try {
-            Class<?> aClass = sysClassLoader.loadClass("com.example.processcommunicate.test.A");
+            Class<?> aClass = sysClassLoader.loadClass("com.example.processcommunicate.myclassloader.A");
             IA a = (IA) aClass.newInstance();
             a.show();
 

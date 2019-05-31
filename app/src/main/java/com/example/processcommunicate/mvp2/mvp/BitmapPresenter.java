@@ -1,9 +1,10 @@
-package com.example.processcommunicate.mvp;
+package com.example.processcommunicate.mvp2.mvp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.example.processcommunicate.mvp.base.BasePresenter;
+import com.example.processcommunicate.mvp2.mvp.base.BaseModel;
+import com.example.processcommunicate.mvp2.mvp.base.BasePresenter;
 
 import java.io.InputStream;
 
@@ -18,11 +19,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class BitmapPresenter extends BasePresenter {
-
-
-
-
-
 
 
     void getBitmap(String url) {
@@ -55,7 +51,7 @@ public class BitmapPresenter extends BasePresenter {
                     public void onNext(Bitmap bitmap) {
 
                         //if (mView != null)
-                            getView().onSuccess(bitmap);
+                        getView().onSuccess(bitmap);
                     }
 
                     @Override
@@ -72,4 +68,9 @@ public class BitmapPresenter extends BasePresenter {
     }
 
 
+
+    @Override
+    public BaseModel createModel() {
+        return new BitmapModel();
+    }
 }

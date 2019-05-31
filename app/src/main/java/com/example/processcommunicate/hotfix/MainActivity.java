@@ -12,6 +12,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_hotfix);
-//        int a = 1 / 0;
+        int a = 1 / 0;
     }
 }
