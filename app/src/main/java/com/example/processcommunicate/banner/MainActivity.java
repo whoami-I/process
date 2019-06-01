@@ -1,6 +1,5 @@
 package com.example.processcommunicate.banner;
 
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -25,21 +24,38 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         List<ImageView> imageViews = new ArrayList<>();
 
+        int[] ids = new int[]{R.drawable.first,
+                R.drawable.second,
+                R.drawable.third};
 
-        ImageView i1 = new ImageView(this);
-        i1.setImageResource(R.drawable.first);
-        ImageView i2 = new ImageView(this);
-        i2.setImageResource(R.drawable.second);
-        ImageView i3 = new ImageView(this);
-        i3.setImageResource(R.drawable.third);
-        imageViews.add(i1);
-        imageViews.add(i2);
-        imageViews.add(i3);
         bannerViewPager.setAdapter(new BannerAdapter() {
             @Override
-            public View getView(int position) {
-                return imageViews.get(position);
+            public View getView(int position, View convertView) {
+                ImageView imageView = null;
+                if (convertView == null) {
+                    imageView = new ImageView(MainActivity.this);
+                } else {
+                    imageView = (ImageView) convertView;
+                }
+
+                imageView.setImageResource(ids[position]);
+                return imageView;
+            }
+
+            @Override
+            public int getCount() {
+                return ids.length;
             }
         });
+        bannerViewPager.setDuration(1500);
+        //bannerViewPager.setOffscreenPageLimit();
+        bannerViewPager.attach();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bannerViewPager.detach();
     }
 }
