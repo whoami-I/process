@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.processcommunicate.log.Log;
 
+import butterknife.ButterKnife;
+
 public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
