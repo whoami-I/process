@@ -33,7 +33,7 @@ public class BannerViewPager extends ViewPager {
     private void startRoll() {
         Message message = Message.obtain();
         message.what = NEXT_PAGE;
-        mH.sendMessageDelayed(message, 3000);
+        mH.sendMessageDelayed(message, 5000);
     }
 
 
