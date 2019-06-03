@@ -108,7 +108,7 @@ public class HookUtils {
         Class<?> atClass = Class.forName("android.app.ActivityThread");
         Method currentActivityThreadMethod = atClass.getDeclaredMethod("currentActivityThread");
         Object atObject = currentActivityThreadMethod
-                .invoke(null, null);
+                .invoke(null);
         Field mH = atClass.getDeclaredField("mH");
         if (!mH.isAccessible()) {
             mH.setAccessible(true);

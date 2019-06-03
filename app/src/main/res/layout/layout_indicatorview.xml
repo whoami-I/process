@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/horizontal_scroll_view"
+
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/horizontal_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+
+    <FrameLayout
+        android:id="@+id/bottom_container"
         android:layout_width="match_parent"
-        android:scrollbars="none"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/indicator_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         </LinearLayout>
-    </HorizontalScrollView>
+    </FrameLayout>
+</HorizontalScrollView>
 

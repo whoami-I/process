@@ -27,7 +27,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.indicator)
     IndicatorView indicatorView;
     String[] items = new String[]{"全部", "乒乓球", "篮球", "羽毛球", "台球", "足球",
-    "CBA","NBA","搏击","电竞"};
+            "CBA", "NBA", "搏击", "电竞"};
 
     @Override
     protected void onSuccess() {
@@ -75,7 +75,12 @@ public class MainActivity extends BaseActivity {
         }, viewPager);
 
         indicatorView.setMargin(20);
-
+        indicatorView.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, "indicatorView --> " + indicatorView.getWidth());
+            }
+        });
 
     }
 

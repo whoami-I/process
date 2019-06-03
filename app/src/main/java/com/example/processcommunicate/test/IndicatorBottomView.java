@@ -1,7 +1,8 @@
-package com.example.processcommunicate.viewpageradapter.indicator;
+package com.example.processcommunicate.test;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -30,6 +31,6 @@ public class IndicatorBottomView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawColor(color);
+        canvas.drawColor(Color.RED);
     }
 }
