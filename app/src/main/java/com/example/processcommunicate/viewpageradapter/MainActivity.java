@@ -26,8 +26,8 @@ public class MainActivity extends BaseActivity {
     MyViewPager viewPager;
     @BindView(R.id.indicator)
     IndicatorView indicatorView;
-    String[] items = new String[]{"直播", "新闻", "福利", "头条", "体育新闻", "英语广播",
-            "直播", "新闻", "福利", "头条", "体育新闻", "英语广播"};
+    String[] items = new String[]{"全部", "乒乓球", "篮球", "羽毛球", "台球", "足球",
+    "CBA","NBA","搏击","电竞"};
 
     @Override
     protected void onSuccess() {
@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity {
 
 
                 colorTrackTextView.setText(items[i]);
-                colorTrackTextView.setTextSize(50);
+                colorTrackTextView.setTextSize(20);
                 return colorTrackTextView;
             }
         }, viewPager);

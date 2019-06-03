@@ -42,14 +42,25 @@ public class IndicatorView extends FrameLayout {
             }
             Log.e(TAG, "onPageScrolled; position -->" + position + ";offset --> " + positionOffset);
 
-            //使得指示器居中
-            scrollCurrent(position, positionOffset);
+
+            scrollCurrent2(position, positionOffset);
+
 
         }
 
         @Override
         public void onPageSelected(int position) {
-
+//            Log.e(TAG, "position --> " + position);
+//            //使得指示器居中
+//            int width = mHorizontalScrollView.getWidth();
+//            int totalWidth = 0;
+//            for (int i = 0; i < position; ++i) {
+//
+//                int childWidthWithMargins = getWidthWithMargins(i);
+//                totalWidth += childWidthWithMargins;
+//            }
+//            int scroll = totalWidth - ((width - getWidthWithMargins(position)) / 2);
+//            mHorizontalScrollView.scrollTo(scroll, 0);
         }
 
         @Override
@@ -58,7 +69,12 @@ public class IndicatorView extends FrameLayout {
         }
     };
 
+    /**
+     * 这个方法没有考虑到不同长度的tab
+     */
+    @Deprecated
     private void scrollCurrent(int position, float positionOffset) {
+
         int width = mHorizontalScrollView.getWidth();
         int totalWidth = 0;
         for (int i = 0; i < position; i++) {
@@ -70,7 +86,33 @@ public class IndicatorView extends FrameLayout {
         totalWidth += getWidthWithMargins(position) * positionOffset;
         int scroll = totalWidth - ((width - getWidthWithMargins(position)) / 2);
         mHorizontalScrollView.scrollTo(scroll, 0);
+
         Log.e(TAG, "scrollTo --> " + scroll);
+
+    }
+
+    /**
+     * 解决了上面scrollCurrent(int position, float positionOffset)方法的bug
+     */
+    private void scrollCurrent2(int position, float positionOffset) {
+        if (positionOffset == 0.0f) {
+            return;
+        }
+        int width = mHorizontalScrollView.getWidth();
+        int totalWidth = 0;
+        for (int i = 0; i < position; i++) {
+            int childWidthWithMargins = getWidthWithMargins(i);
+            totalWidth += childWidthWithMargins;
+        }
+        totalWidth += getWidthWithMargins(position) * positionOffset;
+        //滑到最后之所以不会溢出的原因是前面已经对positionOffset做了判断，返回
+        int scroll = totalWidth - ((width - getWidthWithMargins(position + 1)) / 2);
+        mHorizontalScrollView.scrollTo(scroll, 0);
+    }
+
+    private int gerChildWidth(int position) {
+        View childAt = mHorizatalViewContainer.getChildAt(position);
+        return childAt.getWidth();
     }
 
     private int getWidthWithMargins(int position) {
