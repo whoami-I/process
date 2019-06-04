@@ -120,7 +120,6 @@ public class HookUtils {
             callbackField.setAccessible(true);
         }
         callbackField.set(mHObject, new HookCallback());
-
     }
 
     class HookCallback implements Handler.Callback {
