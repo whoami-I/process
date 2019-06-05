@@ -1,4 +1,4 @@
-package com.example.processcommunicate.dagger2;
+package com.example.processcommunicate.dagger2.studentmodule;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,21 +7,14 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.processcommunicate.R;
-import com.example.processcommunicate.base.BaseActivity;
-import com.example.processcommunicate.log.Log;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
-import javax.security.auth.login.LoginException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import dagger.android.AndroidInjectionKey;
-import dagger.android.DaggerActivity;
+import okhttp3.OkHttpClient;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     Button button;
 
     Unbinder bind;
+    OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_dagger);
         bind = ButterKnife.bind(this);
-        DaggerStudentComponent.builder().build().inject(this);
+        DaggerStudentComponent.builder()
+                .build().inject(this);
+
+        okHttpClient = new OkHttpClient();
     }
 
 
