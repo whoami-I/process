@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".dagger2.dependency.component.MainActivity">
+        <activity android:name=".dagger2.scope.MainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +41,9 @@
         </service>
         <activity android:name=".plugin.ProxyActivity" />
         <activity android:name=".hotfix.MainActivity" />
+        <activity android:name=".dagger2.scope.SecondActivity" />
         <activity android:name=".binder.SecondActivity" />
+        <activity android:name=".dagger2.scope.ThirdActivity" />
         <activity android:name=".eventbus.SecondActivity" />
     </application>
 

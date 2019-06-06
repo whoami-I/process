@@ -1,4 +1,4 @@
-package com.example.processcommunicate.dagger2.studentmodule;
+package com.example.processcommunicate.dagger2.scope;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.processcommunicate.R;
+import com.example.processcommunicate.log.Log;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -15,39 +16,42 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import okhttp3.OkHttpClient;
 
 
-public class MainActivity extends AppCompatActivity {
-    @Named("int")
+public class ThirdActivity extends AppCompatActivity {
+    private static final String TAG = "SecondActivity";
     @Inject
-    Student s;
-
     @Named("null")
+    Student s;
     @Inject
+    @Named("int")
     Student s1;
     @BindView(R.id.button)
     Button button;
 
     Unbinder bind;
-    OkHttpClient okHttpClient;
-
+    @Inject
+    Data d;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_dagger);
         bind = ButterKnife.bind(this);
-        DaggerStudentComponent.builder()
-                .build().inject(this);
+        DaggerThirdActivityComponent
+                .builder()
+                .studentComponent(Holder.getStudentComponent())
+                .build()
+                .inject(this);
+        Log.e(TAG, "-->" + s);
+        Log.e(TAG, "-->" + s1);
 
-        okHttpClient = new OkHttpClient();
     }
 
 
     @OnClick(R.id.button)
     public void click(View v) {
-        s.show();
+
     }
 
     @Override
